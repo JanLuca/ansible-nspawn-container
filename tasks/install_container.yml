@@ -1,0 +1,93 @@
+---
+
+- set_fact:
+    container: "{{item}}"
+
+- name: Check if container name is too long
+  fail:
+    msg: 'Container name "{{container.name}}" is too long (maximum 11 letters)'
+  when: "{{container.name | length}} > 11"
+
+- set_fact:
+    install_packages: "{{nspawn_container_default_additional_packages}} + {{container.packages}}"
+  when: container.packages is defined
+
+- set_fact:
+    install_packages: "{{nspawn_container_default_additional_packages}}"
+  when: container.packages is not defined
+
+- name: 'Run debootstrap for container "{{container.name}}"'
+  command: >
+    /usr/sbin/debootstrap {% if install_packages %}--include={{install_packages | join(',')}}{% endif %}
+    {{container.suite | default(nspawn_container_default_suite)}}
+    {{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/
+    {{container.mirror | default(nspawn_container_default_mirror)}}
+  args:
+    creates: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/'
+
+- name: 'Set SSH-Keys for container "{{container.name}}"'
+  authorized_key:
+    user: root
+    state: present
+    manage_dir: yes
+    path: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/root/.ssh/authorized_keys'
+    key: '{{item.type}} {{item.key}}{% if item.comment is defined %} {{item.comment}}{% endif %}'
+  with_items: '{{nspawn_container_ssh_keys}}'
+
+- name: 'Add nspawn config file for container "{{container.name}}"'
+  template:
+    src: container.nspawn.jinja2
+    dest: '/etc/systemd/nspawn/{{container.name}}.nspawn'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: 'Add network config for container "{{container.name}}"'
+  template:
+    src: container.network.jinja2
+    dest: '/etc/systemd/network/70-nspawn-{{container.name}}.network'
+    owner: root
+    group: root
+    mode: 0644
+  register: nspawn_network_container
+
+- name: 'Ensure that multi-user.target.wants exists for container "{{container.name}}"'
+  file:
+    path: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/systemd/system/multi-user.target.wants'
+    state: directory
+
+- name: 'Ensure that sockets.target.wants exists for container "{{container.name}}"'
+  file:
+    path: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/systemd/system/sockets.target.wants'
+    state: directory
+
+- name: 'Activate systemd-networkd.service for container "{{container.name}}"'
+  file:
+    src: /lib/systemd/system/systemd-networkd.service
+    dest: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/systemd/system/multi-user.target.wants/systemd-networkd.service'
+    state: link
+
+- name: 'Activate systemd-networkd.socket for container "{{container.name}}"'
+  file:
+    src: /lib/systemd/system/systemd-networkd.socket
+    dest: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/systemd/system/sockets.target.wants/systemd-networkd.socket'
+    state: link
+
+- name: 'Activate systemd-resolved for container "{{container.name}}"'
+  file:
+    src: /lib/systemd/system/systemd-resolved.service
+    dest: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/systemd/system/multi-user.target.wants/systemd-resolved.service'
+    state: link
+
+- name: Restart systemd-networkd
+  systemd:
+    name: systemd-networkd
+    state: restarted
+  when: nspawn_network_container.changed
+
+- name: 'Start and enable systemd-service for container "{{container.name}}"'
+  systemd:
+    name: 'systemd-nspawn@{{container.name}}.service'
+    state: started
+    enabled: True
+  when: container.enable_service is not defined or container.enable_service

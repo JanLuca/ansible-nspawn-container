@@ -1,0 +1,32 @@
+---
+
+- name: Ensure that systemd-container and debootstrap are installed
+  apt:
+    name: '{{item}}'
+    update_cache: yes
+  with_items:
+  - systemd-container
+  - debootstrap
+
+- name: Ensure that systemd-networkd is enabled and started
+  systemd:
+    name: systemd-networkd.service
+    state: started
+    enabled: True
+
+- name: Ensure that systemd-resolved is enabled and started
+  systemd:
+    name: systemd-resolved.service
+    state: started
+    enabled: True
+
+- name: 'Ensure /etc/systemd/nspawn exists'
+  file:
+    path: '/etc/systemd/nspawn'
+    owner: root
+    group: root
+    mode: 0644
+    state: directory
+
+- include: install_container.yml
+  with_items: '{{ nspawn_container_containers }}'

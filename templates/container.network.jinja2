@@ -1,0 +1,10 @@
+[Match]
+Name=ve-{{container.name}}
+
+[Network]
+Address={{container.network.address}}/{{container.network.netmask}}
+LinkLocalAddressing=yes
+DHCPServer=yes
+IPMasquerade=yes
+LLDP=yes
+EmitLLDP=customer-bridge

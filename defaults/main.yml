@@ -1,0 +1,39 @@
+---
+
+# Mode can be 'install' or 'upgrade'
+nspawn_container_mode: 'install'
+
+nspawn_container_default_install_path: '/var/lib/machines'
+nspawn_container_default_mirror: 'http://deb.debian.org/debian'
+nspawn_container_default_suite: 'stretch'
+
+nspawn_container_default_additional_packages:
+- openssh-server
+
+# Example for nspawn_container_ssh_keys
+# nspawn_container_ssh_keys:
+# - type: for example ssh-rsa
+#   key: public key for authorized_keys file
+#   comment: comment for key, omit if not needed
+
+# Example for nspawn_container_containers
+# nspawn_container_containers:
+# - name: name of container
+#   install_path: path where the container will be installed to as subdirectory with name from above, omit if not needed
+#   suite: Debian suite for debootstrap, omit if not needed
+#   mirror: Debian mirror for debootstrap, omit if not needed
+#   automatic_upgrade: True
+#   network:
+#     address: host side address of private network with container
+#     netmask: netmask of the private network (have to be at least 30)
+#   packages: # omit if not needed
+#   - additional package for debootstrap
+#   ports: # omit if not needed
+#   - type: tcp or udp
+#     host: host port
+#     container: container port
+#   binds: # omit if not needed
+#   - type: ro or rw
+#     host: host path
+#     container: container path
+#     options: mount options, omit if not needed

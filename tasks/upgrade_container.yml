@@ -1,0 +1,10 @@
+---
+
+- set_fact:
+    container: "{{item}}"
+
+- name: 'Run apt update for container "{{container.name}}"'
+  command: "machinectl {{container.name}} apt update"
+
+- name: 'Run apt upgrade for container "{{container.name}}"'
+  command: "machinectl {{container.name}} apt upgrade"

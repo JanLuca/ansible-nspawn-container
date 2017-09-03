@@ -1,0 +1,5 @@
+---
+
+- include: upgrade_container.yml
+  when: item.automatic_upgrade
+  with_items: '{{ nspawn_container_containers }}'

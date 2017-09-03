@@ -1,0 +1,13 @@
+{% if container.binds is defined %}
+[Files]
+{% for bind in container.binds %}
+{% if bind.type == "ro" %}BindReadOnly{% else %}Bind{% endif %}={{bind.host}}:{{bind.container}}{% if bind.options %}:bind.options{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if container.ports is defined %}
+[Network]
+{% for port in container.ports %}
+Port={% if port.type == 'udp' %}udp{% else %}tcp{% endif %}:{{port.host}}:{{port.container}}
+{% endfor %}
+{% endif %}

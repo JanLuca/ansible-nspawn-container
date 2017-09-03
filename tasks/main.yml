@@ -1,0 +1,12 @@
+---
+
+- name: Check if Debian family
+  fail: 
+    msg: 'This playbook only works on Debian-style distros'
+  when: ansible_os_family != 'Debian'
+
+- include: install.yml
+  when: nspawn_container_mode == 'install'
+
+- include: upgrade.yml
+  when: nspawn_container_mode == 'upgrade'
