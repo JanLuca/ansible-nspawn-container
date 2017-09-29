@@ -10,6 +10,7 @@ nspawn_container_default_suite: 'stretch'
 nspawn_container_default_additional_packages:
 - openssh-server
 - python
+- sudo
 
 # Example for nspawn_container_ssh_keys
 # nspawn_container_ssh_keys:
