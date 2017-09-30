@@ -79,6 +79,14 @@
     dest: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/systemd/system/multi-user.target.wants/systemd-resolved.service'
     state: link
 
+- name: 'Set hostname for container "{{container.name}}"'
+  template:
+    src: container.hostname.jinja2
+    dest: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/hostname'
+    owner: root
+    group: root
+    mode: 0644
+
 - name: Restart systemd-networkd
   systemd:
     name: systemd-networkd
