@@ -95,6 +95,22 @@
     group: root
     mode: 0644
 
+- name: 'Set /etc/msmtprc for container "{{container.name}}"'
+  template:
+    src: container.msmtprc.jinja2
+    dest: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/msmtprc'
+    owner: root
+    group: root
+    mode: 0644
+
+- name: 'Create /var/log/msmtp.log for container "{{container.name}}"'
+  file:
+    path: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/var/log/msmtp.log'
+    state: touch
+    owner: root
+    group: mail
+    mode: 0664
+
 - name: Restart systemd-networkd
   systemd:
     name: systemd-networkd
