@@ -87,6 +87,15 @@
     group: root
     mode: 0644
 
+- name: 'Add security archive for container "{{container.name}}"'
+  template:
+    src: security.sources.list.jinja2
+    dest: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/apt/sources.list.d/{{container.suite | default(nspawn_container_default_suite)}}_security.list'
+    owner: root
+    group: root
+    mode: 0644
+  register: nspawn_security_archive
+
 - name: Restart systemd-networkd
   systemd:
     name: systemd-networkd
