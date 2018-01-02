@@ -8,6 +8,7 @@ DHCPServer=yes
 IPMasquerade=yes
 LLDP=yes
 EmitLLDP=customer-bridge
+IPForward=yes
 
 {% if container.ipv6_host_ips is defined %}
 {% for ip in container.ipv6_host_ips %}
