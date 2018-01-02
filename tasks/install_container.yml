@@ -42,10 +42,19 @@
     group: root
     mode: 0644
 
-- name: 'Add network config for container "{{container.name}}"'
+- name: 'Add host network config for container "{{container.name}}"'
   template:
     src: container.network.jinja2
     dest: '/etc/systemd/network/70-nspawn-{{container.name}}.network'
+    owner: root
+    group: root
+    mode: 0644
+  register: nspawn_network_container
+
+- name: 'Add container network config for container "{{container.name}}"'
+  template:
+    src: container-host0.network.jinja2
+    dest: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/systemd/network/70-container-host0.network.jinja2.network'
     owner: root
     group: root
     mode: 0644

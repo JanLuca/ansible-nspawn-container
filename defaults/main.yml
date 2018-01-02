@@ -28,6 +28,10 @@ nspawn_container_default_additional_packages:
 #   network:
 #     address: host side address of private network with container
 #     netmask: netmask of the private network (have to be at least 30)
+#   ipv6_host_ips: # omit if not needed
+#   - IPv6 address
+#   ipv6_container_ips: # omit if not needed
+#   - IPv6 address
 #   packages: # omit if not needed
 #   - additional package for debootstrap
 #   ports: # omit if not needed

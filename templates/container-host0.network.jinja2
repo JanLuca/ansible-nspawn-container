@@ -1,0 +1,24 @@
+[Match]
+Virtualization=container
+Name=host0
+
+[Network]
+DHCP=yes
+LinkLocalAddressing=yes
+LLDP=yes
+EmitLLDP=customer-bridge
+
+[DHCP]
+UseTimezone=yes
+
+{% if container.ipv6_container_ips is defined %}
+{% for ip in container.ipv6_container_ips %}
+[Address]
+Address={{ip}}
+{% endfor %}
+{% endif %}
+
+{% if container.ipv6_host_ips is defined %}
+[Route]
+Gateway={{container.ipv6_host_ips[0]}}
+{% endif %}

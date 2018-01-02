@@ -8,3 +8,17 @@ DHCPServer=yes
 IPMasquerade=yes
 LLDP=yes
 EmitLLDP=customer-bridge
+
+{% if container.ipv6_host_ips is defined %}
+{% for ip in container.ipv6_host_ips %}
+[Address]
+Address={{ip}}
+{% endfor %}
+{% endif %}
+
+{% if container.ipv6_container_ips is defined %}
+{% for ip in container.ipv6_container_ips %}
+[Route]
+Destination={{ip}}
+{% endfor %}
+{% endif %}
