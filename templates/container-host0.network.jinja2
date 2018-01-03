@@ -27,6 +27,7 @@ Gateway={{container.ipv6_host_ips[0].address}}
 [Route]
 Gateway={{container.ipv6_host_ips[0].address}}
 Destination={{ip.address}}/{{ip.netmask}}
+Metric=128
 
 {% endfor %} 
 {% endif %} 

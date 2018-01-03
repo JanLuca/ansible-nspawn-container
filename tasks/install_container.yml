@@ -54,7 +54,7 @@
 - name: 'Add container network config for container "{{container.name}}"'
   template:
     src: container-host0.network.jinja2
-    dest: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/systemd/network/70-container-host0.network.jinja2.network'
+    dest: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/etc/systemd/network/70-container-host0.network'
     owner: root
     group: root
     mode: 0644
