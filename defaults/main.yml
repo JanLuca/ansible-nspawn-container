@@ -19,6 +19,11 @@ nspawn_container_default_additional_packages:
 #   key: public key for authorized_keys file
 #   comment: comment for key, omit if not needed
 
+# Example for nspawn_container_ssh_keys
+# nspawn_container_ipv6_route:
+# - network: IPv6 network address
+#   netmask: IPv6 network netmask
+
 # Example for nspawn_container_containers
 # nspawn_container_containers:
 # - name: name of container
