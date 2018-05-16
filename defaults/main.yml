@@ -12,6 +12,8 @@ nspawn_container_default_additional_packages:
 - python
 - sudo
 - msmtp-mta
+- dbus
+- locales
 
 # Example for nspawn_container_ssh_keys
 # nspawn_container_ssh_keys:
