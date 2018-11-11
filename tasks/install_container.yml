@@ -121,13 +121,19 @@
 #    group: root
     mode: 0644
 
+- name: 'Check that /var/log/msmtp.log exists for container "{{container.name}}"'
+  stat:
+    path: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/var/log/msmtp.log'
+  register: msmtp_result
+
 - name: 'Create /var/log/msmtp.log for container "{{container.name}}"'
   file:
     path: '{{container.install_path | default(nspawn_container_default_install_path)}}/{{container.name}}/var/log/msmtp.log'
     state: touch
-#    owner: root
+    owner: root
     group: mail
-    mode: 0664
+    mode: 0660
+  when: msmtp_result.stat.exists == False
 
 - name: Restart systemd-networkd
   systemd:
