@@ -5,7 +5,7 @@ nspawn_container_mode: 'install'
 
 nspawn_container_default_install_path: '/var/lib/machines'
 nspawn_container_default_mirror: 'http://deb.debian.org/debian'
-nspawn_container_default_suite: 'stretch'
+nspawn_container_default_suite: 'buster'
 
 nspawn_container_default_additional_packages:
 - openssh-server
